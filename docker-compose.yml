@@ -1,0 +1,16 @@
+services:
+  rentcars:
+    image: postgres:16.3
+    restart: always
+    container_name: rentcars
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: rentcars
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
