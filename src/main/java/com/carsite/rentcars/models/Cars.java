@@ -33,9 +33,11 @@ public class Cars extends Base {
     // TODO: implements image for cars
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @Cascade(CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToOne(mappedBy = "cars", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private CarsCategory carsCategory;
 
     public String getBrand() {
         return brand;
@@ -93,30 +95,40 @@ public class Cars extends Base {
         this.category = category;
     }
 
+    public CarsCategory getCarsCategory() {
+        return carsCategory;
+    }
+
+    public void setCarsCategory(CarsCategory carsCategory) {
+        this.carsCategory = carsCategory;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        if (!super.equals(o))
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         Cars cars = (Cars) o;
-        return Objects.equals(getId(), cars.getId()) && Objects.equals(brand, cars.brand)
-                && Objects.equals(model, cars.model) && Objects.equals(price, cars.price)
-                && Objects.equals(year, cars.year) && Objects.equals(available, cars.available)
-                && Objects.equals(description, cars.description) && Objects.equals(category, cars.category);
+        return Objects.equals(getId(), cars.getId()) && Objects.equals(brand, cars.brand) && Objects.equals(model, cars.model) && Objects.equals(price, cars.price) && Objects.equals(year, cars.year) && Objects.equals(available, cars.available) && Objects.equals(description, cars.description) && Objects.equals(category, cars.category) && Objects.equals(carsCategory, cars.carsCategory);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getId(), brand, model, price, year, available, description, category);
+        return Objects.hash(super.hashCode(), getId(), brand, model, price, year, available, description, category, carsCategory);
     }
 
     @Override
     public String toString() {
-        return "Cars{" + "id=" + getId() + ", brand='" + brand + '\'' + ", model='" + model + '\'' + ", price=" + price
-                + ", year=" + year + ", available=" + available + ", description='" + description + '\'' + ", category="
-                + category + '}';
+        return "Cars{" +
+                "id=" + getId() +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", price=" + price +
+                ", year=" + year +
+                ", available=" + available +
+                ", description='" + description + '\'' +
+                ", category=" + category +
+                ", carsCategory=" + carsCategory +
+                '}';
     }
 }

@@ -10,12 +10,10 @@ import java.util.Objects;
 public class CarsCategory extends Base {
 
     @ManyToOne
-    @Cascade(CascadeType.ALL)
     @JoinColumn(name = "cars_id")
     private Cars cars;
 
     @ManyToOne
-    @Cascade(CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
 

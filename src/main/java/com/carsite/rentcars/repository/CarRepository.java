@@ -11,7 +11,6 @@ import java.util.Optional;
 
 public interface CarRepository extends JpaRepository<Cars, Long> {
 
-
     // String QUERY_FIND_CARS_BY_CATEGORY = "SELECT car FROM Cars car JOIN car.category category WHERE category.name =
     // :categoryName";
     // String QUERY_FIND_CARS_BY_CATEGORY_ID = "SELECT car FROM Cars car JOIN car.category category WHERE category.id =
