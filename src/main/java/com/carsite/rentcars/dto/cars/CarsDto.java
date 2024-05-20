@@ -15,14 +15,15 @@ public class CarsDto {
     Long version;
     private String brand;
     private String model;
-    private BigDecimal price;
     private Integer year;
     private Boolean available;
     private String description;
 
     private Long categoryId;
-
     private CategoryDto category;
+
+    private Long priceId;
+    private PriceDto price;
 
     public Long getId() {
         return id;
@@ -46,14 +47,6 @@ public class CarsDto {
 
     public void setModel(String model) {
         this.model = model;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public Integer getYear() {
@@ -102,5 +95,21 @@ public class CarsDto {
 
     public void setCategory(CategoryDto category) {
         this.category = category;
+    }
+
+    public Long getPriceId() {
+        return priceId;
+    }
+
+    public void setPriceId(Long priceId) {
+        this.priceId = priceId;
+    }
+
+    public PriceDto getPrice() {
+        return price;
+    }
+
+    public void setPrice(PriceDto price) {
+        this.price = price;
     }
 }

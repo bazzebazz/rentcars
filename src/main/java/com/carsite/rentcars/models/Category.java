@@ -32,7 +32,6 @@ public class Category extends Base {
         this.description = description;
     }
 
-
     public List<Cars> getCars() {
         return cars;
     }
@@ -43,11 +42,15 @@ public class Category extends Base {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
         Category category = (Category) o;
-        return Objects.equals(getId(), category.getId()) && Objects.equals(name, category.name) && Objects.equals(description, category.description) && Objects.equals(cars, category.cars);
+        return Objects.equals(getId(), category.getId()) && Objects.equals(name, category.name)
+                && Objects.equals(description, category.description) && Objects.equals(cars, category.cars);
     }
 
     @Override
@@ -57,11 +60,7 @@ public class Category extends Base {
 
     @Override
     public String toString() {
-        return "Category{" +
-                "id=" + getId() +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", cars=" + cars +
-                '}';
+        return "Category{" + "id=" + getId() + ", name='" + name + '\'' + ", description='" + description + '\''
+                + ", cars=" + cars + '}';
     }
 }
