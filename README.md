@@ -9,9 +9,9 @@ Actual microservice **_cars_**
 
 ## Requirements
 
-Si instalaste en tu máquina algunas de estas herramientas anteriormente o lo acabas de hacerahora, verifica si todo funciona bien.
+Check this program versions.
 
-- Check versions:
+- Java version:
    ````
    % java -version
   openjdk 17.0.6 2023-01-17 LTS
