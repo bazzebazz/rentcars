@@ -9,7 +9,7 @@ public enum APIError {
     CAR_WITH_SAME_ID(HttpStatus.BAD_REQUEST, "There is a car with the same id"),
     CAR_CATEGORY_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "Car category already exist"),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "Category not found"),
-    EXCEED_NUMBER_OPERATIONS(HttpStatus.TOO_MANY_REQUESTS, "You exceed the number of operations"),;
+    CAR_PRICE_NOT_FOUND(HttpStatus.NOT_FOUND, "Price not found for this car");
 
     private final HttpStatus httpStatus;
     private final String message;

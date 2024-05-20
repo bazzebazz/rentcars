@@ -12,7 +12,6 @@ import com.carsite.rentcars.models.Price;
 import com.carsite.rentcars.repository.CarRepository;
 import com.carsite.rentcars.repository.CarsCategoryRepository;
 import com.carsite.rentcars.repository.CategoryRepository;
-import com.carsite.rentcars.repository.PriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -28,18 +27,15 @@ public class CarService {
     private final CarRepository carRepository;
     private final CategoryRepository categoryRepository;
     private final CarsCategoryRepository carsCategoryRepository;
-    private final PriceRepository priceRepository;
     private final ConversionService conversionService;
 
     @Autowired
     public CarService(CarRepository carRepository, ConversionService conversionService,
-            CategoryRepository categoryRepository, CarsCategoryRepository carsCategoryRepository,
-            PriceRepository priceRepository) {
+            CategoryRepository categoryRepository, CarsCategoryRepository carsCategoryRepository) {
         this.carRepository = carRepository;
         this.conversionService = conversionService;
         this.categoryRepository = categoryRepository;
         this.carsCategoryRepository = carsCategoryRepository;
-        this.priceRepository = priceRepository;
     }
 
     public List<CarsDto> getAllCars() {
@@ -95,40 +91,54 @@ public class CarService {
         Cars existingCar = carRepository.findById(id).orElseThrow(() -> new CarException(APIError.CAR_NOT_FOUND));
         Category category = categoryRepository.findById(carsDto.getCategoryId())
                 .orElseThrow(() -> new CarException(APIError.CATEGORY_NOT_FOUND));
-        Price price = priceRepository.findById(carsDto.getPriceId())
-                .orElseThrow(() -> new RuntimeException("Price not found"));
 
         // Comprobar si la relación ya existe
         if (carsCategoryRepository.existsByCarsIdAndCategoryId(existingCar.getId(), category.getId())) {
             throw new CarException(APIError.CAR_CATEGORY_ALREADY_EXIST);
         }
-
-        // Primero, eliminar todas las relaciones anteriores en la tabla intermedia cars_category
-        carsCategoryRepository.deleteByCarsId(existingCar.getId());
+        // Recuperar y actualizar el precio existente
+        Price existingPrice = getPrice(carsDto, existingCar);
 
         // Actualizar los campos del Car existente con los valores del DTO
         existingCar.setBrand(carsDto.getBrand());
         existingCar.setModel(carsDto.getModel());
-        existingCar.setPrice(price);
         existingCar.setYear(carsDto.getYear());
         existingCar.setAvailable(carsDto.getAvailable());
         existingCar.setDescription(carsDto.getDescription());
+        existingCar.setCategory(category);
+
+        existingCar.setPrice(existingPrice);
+
+        Cars updatedCar = carRepository.save(existingCar);
+
+        // Eliminar todas las relaciones anteriores en la tabla intermedia cars_category
+        carsCategoryRepository.deleteByCarsId(existingCar.getId());
 
         // Añadir la nueva relación
         CarsCategory carsCategory = new CarsCategory();
-        carsCategory.setCars(existingCar);
+        carsCategory.setCars(updatedCar);
         carsCategory.setCategory(category);
-        carsCategoryRepository.save(carsCategory);
 
-        // Guardar el coche actualizado
-        Cars updatedCar = carRepository.save(existingCar);
+        carsCategoryRepository.save(carsCategory);
 
         // Convertir la entidad actualizada a DTO y devolverla
         CarsDto resultDto = conversionService.convert(updatedCar, CarsDto.class);
         resultDto.setCategory(conversionService.convert(category, CategoryDto.class));
-        resultDto.setPrice(conversionService.convert(price, PriceDto.class));
+        resultDto.setPrice(conversionService.convert(existingPrice, PriceDto.class));
 
         return resultDto;
+    }
+
+    private static Price getPrice(CarsDto carsDto, Cars existingCar) {
+        Price existingPrice = existingCar.getPrice();
+        if (existingPrice == null) {
+            throw new CarException(APIError.CAR_PRICE_NOT_FOUND);
+        }
+        existingPrice.setDailyPrice(carsDto.getPrice().getDailyPrice());
+        existingPrice.setDiscountRate(carsDto.getPrice().getDiscountRate());
+        existingPrice.setTotalPrice(carsDto.getPrice().getTotalPrice());
+        existingPrice.setInDiscount(carsDto.getPrice().getInDiscount());
+        return existingPrice;
     }
 
     @Transactional
