@@ -1,4 +1,19 @@
 services:
+  rentcars-app:
+    image: donjavidev/rent-car-microservice:1.0.7
+    container_name: rentcars-app
+    ports:
+      - 8080:8080
+    restart: always
+    links:
+      - rentcars
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rentcars/rentcars
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+
+
   rentcars:
     image: postgres:16.3
     restart: always
@@ -11,6 +26,8 @@ services:
       POSTGRES_PASSWORD: root
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+
 
 volumes:
   postgres_data:
